@@ -4,7 +4,7 @@ Bundler.require
 class Main 
 
   def initialize
-    @crawler = Assets::Crawler.new
+    @crawler = TwitterConnection::Crawler.new
   end
 
   def main

@@ -1,4 +1,4 @@
-class Assets::Connecter
+class TwitterConnection::Connecter
 
   attr_reader :request_token
 

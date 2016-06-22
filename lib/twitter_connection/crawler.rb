@@ -1,7 +1,7 @@
-class Assets::Crawler
+class TwitterConnection::Crawler
 
   # twitter apiと接続するクラス
-  @@connecter   = Assets::Connecter.new
+  @@connecter   = TwitterConnection::Connecter.new
 
   def initialize()
     @max_id   = nil        # 取得時の"最も過去のtweet id"
