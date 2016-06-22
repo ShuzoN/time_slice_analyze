@@ -1,48 +1,44 @@
-require File.expand_path('../connecter.rb', __FILE__)
-require File.expand_path('../model.rb', __FILE__)
+class Assets::Crawler
 
-class Crawler
+  # twitter apiと接続するクラス
+  @@connecter   = Assets::Connecter.new
 
-  # twitter apiと接続するクラス(class 変数)
-  @@connecter   = Connecter.new
-
-  # crawlerを初期化
   def initialize()
-    # @reqNum       # tweet取得数
-    @max_id   = nil  # 指定tweetIDより過去のtweetを取得するパラメタ(指定IDは含まれる)
-    @tweets  = Array.new() # 取得tweet配列
+    @max_id   = nil        # 取得時の"最も過去のtweet id"
+    @tweets  = Array.new() # 取得したtweetのキャッシュ
   end
-
-  # クロールしたtweetの情報をDBに加える
-  def store_tweets_to_db(tweets)
-    tweets.each do |tweet|  #tweet.class => hash
-      user = tweet["user"]
-      puts user["id"]
-      #Userテーブルにデータ追加
-      # User.storeUser(user)    
-      #Tweetテーブルにデータ追加
-      # Tweet.storeTweet(tweet) 
-    end
-  end
-
 
   # Twitter APIからTweetを取得し配列に整形する
   # APIは1度に200件まで取得可能. 最後は端数を取得. 
   # 200件を超える場合は, 最後のTweetIDを記憶して, そこから再取得を行う. 
-  # 要求件数に到達するまで複数回取得を行う. 
+  # 要求件数に到達するまで取得を行う. 
   def get_tweets(req_num = 1) #default=1
+
+    if req_num <= 0
+      puts 'too few request paramater argment!!'
+      exit(1)
+    end
+
+    # 取得回数の計算
     acquire_times, acquire_fraction = calculate_acquire_times(req_num)  
 
+    # 200 * t 件取得
     acquire_times.times do |t|
       store_tweets_to_cache(200,@max_id)
     end
 
-    if @max_id && acquire_fraction != 0
-      fraction = acquire_fraction-(acquire_times-1) 
+    # 端数を取得
+    if acquire_fraction > 0
+      fraction = acquire_fraction
+      if @max_id
+      #重複する1件を取り除く
+        fraction -= (acquire_times-1) 
+      end
       store_tweets_to_cache(fraction,@max_id)
     end
     @tweets
   end
+
 
   # ----------------- private ---------------------
   #
@@ -75,5 +71,14 @@ class Crawler
     @max_id = tweets.last["id"].to_i - 1 
     end
   end
+
+  # tweetの情報をDBに加える
+  def store_tweets_to_db(tweets)
+    tweets.each do |tweet|  #tweet.class => hash
+      #Tweetテーブルにデータ追加
+      Tweet.storeTweet(tweet) 
+    end
+  end
+
 end
 

@@ -1,4 +1,4 @@
-class Connecter
+class Assets::Connecter
 
   attr_reader :request_token
 
