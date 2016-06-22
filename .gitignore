@@ -16,3 +16,9 @@
 /log/*
 !/log/.keep
 /tmp
+<<<<<<< HEAD
+=======
+
+# Ignore vim temp file
+*.swp
+>>>>>>> env_setting

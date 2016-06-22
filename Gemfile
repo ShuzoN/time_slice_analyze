@@ -32,25 +32,30 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
+# Call 'byebug' anywhere in the code to stop execution and get a debugger console
+gem 'byebug'
 
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
+# Access an IRB console on exception pages or by using <%= console %> in views
+gem 'web-console', '~> 2.0'
 
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+# Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+gem 'spring'
 
-  # rails consoleをリッチにする
-  gem 'pry-rails'   # rails consoleでpryを使う
-  gem 'pry-doc'     # methodを表示
-  gem 'pry-byebug'  # デバッグを実施
-  gem 'pry-stack_explorer' # スタックをたどれる
-  gem 'hirb'
-  gem 'hirb-unicode'
+# rails consoleをリッチにする
+gem 'pry-rails'   # rails consoleでpryを使う
+gem 'pry-doc'     # methodを表示
+gem 'pry-byebug'  # デバッグを実施
+gem 'pry-stack_explorer' # スタックをたどれる
+gem 'hirb'
+gem 'hirb-unicode'
+gem 'coderay'
 
 # 初期データ入力
 gem 'seed-fu', '~> 2.3'
-end
+
+# sqlite3関連
+gem 'dbd-sqlite3'
+
+# twitter apiの認証
+gem 'oauth', '~> 0.4.7'
 

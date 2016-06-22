@@ -22,5 +22,7 @@ module TimeSliceAnalyze
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    # rails_root/lib以下のファイルを自動でloadする
+    config.autoload_paths += %W(#{config.root}/lib)
   end
 end
