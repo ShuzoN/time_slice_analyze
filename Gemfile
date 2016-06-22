@@ -48,6 +48,7 @@ gem 'pry-byebug'  # デバッグを実施
 gem 'pry-stack_explorer' # スタックをたどれる
 gem 'hirb'
 gem 'hirb-unicode'
+gem 'awesome_print'
 gem 'coderay'
 
 # 初期データ入力
