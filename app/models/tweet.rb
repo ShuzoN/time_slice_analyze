@@ -24,4 +24,16 @@ class Tweet < ActiveRecord::Base
       )
     end
   end
+
+
+  # あるユーザのツイート取得
+  scope :find_by_user, ->(user_id){where(user_id: user_id)}
+
+  # 要求された件数でTweetをまとめる
+  # 最新ツイートが先頭になるように並びかえ
+  # 繰り返せるようにオフセット(埋め合わせ)を設定可能
+  scope :group_by_count, ->(user_id, req_count, offset){
+    find_by_user(user_id) \
+      .order("post_date DESC").limit(req_count).offset(offset)
+  }
 end

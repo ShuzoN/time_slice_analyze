@@ -8,7 +8,10 @@ class Main
   end
 
   def main
+    doc_count = Document::GenerateDocument.new
 
+    doc_count.generate_by_count(3,100)
+    puts doc_count.documents[1]
   end
 
   # ----------------------------------------
