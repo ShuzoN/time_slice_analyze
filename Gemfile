@@ -60,3 +60,5 @@ gem 'dbd-sqlite3'
 # twitter apiの認証
 gem 'oauth', '~> 0.4.7'
 
+# Mecabのrubyバインディング
+gem 'natto'
