@@ -8,8 +8,15 @@ class Main
   end
 
   def main
+
+  end
+
+  # ----------------------------------------
+  private
+
+  def acquire_tweets_and_store_db
     # TwitterAPIから1ユーザのtweetを指定件数 取得
-    tweets = @crawler.get_tweets(10)
+    tweets = @crawler.get_tweets(3200)
 
     # DBに取得データを保存
     user = tweets.first["user"]
