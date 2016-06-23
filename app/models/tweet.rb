@@ -25,6 +25,13 @@ class Tweet < ActiveRecord::Base
     end
   end
 
+  # ActiveRecordRelation => String変換を行う
+  # scope :group_by_countで取得したレコード群を
+  # まとめて, 1つの文字列に変換する
+  def self.to_d(tweet_group)
+    division_mark = "<div_mark>" # Tweetの区切り
+    return tweet_group.pluck(:text).join(division_mark)
+  end
 
   # あるユーザのツイート取得
   scope :find_by_user, ->(user_id){where(user_id: user_id)}

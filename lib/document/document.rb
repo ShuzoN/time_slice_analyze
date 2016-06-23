@@ -1,18 +1,12 @@
 class Document::Document
+  attr_accessor :org_txt \
+               ,:wakati_org_txt \
+               ,:num_of_all_words
 
   def initialize
-    @division_mark = "<div_mark>" # Tweetの区切り
+   @org_txt=""            # 原文
+   @wakati_org_txt=[]     # 分かち書きした原文
+   @num_of_all_words=0    # 文書中の全単語数
   end
 
-  def read()
-
-  end
-
-  def write()
-
-  end
-
-  def self.to_d(tweet_group)
-    return tweet_group.pluck(:text).join(@division_mark)
-  end
 end
