@@ -5,11 +5,13 @@ class Main
 
   def initialize
     @crawler = TwitterConnection::Crawler.new
+    @g_doc_by_count = Document::Generate::ByCount.new
   end
 
   def main
-    g_doc_by_count = Document::Generate::ByCount.new
-    documents = g_doc_by_count.generate_documents(3,100) #user_id, req_num
+    # 要求件数毎にTweetをまとめた文書群を生成する
+    # 引数 : (ユーザID, 文書に含めるTweet数)
+    whole_documents = @g_doc_by_count.generate_documents(3,100) 
   end
 
   # ----------------------------------------

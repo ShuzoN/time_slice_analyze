@@ -1,12 +1,7 @@
 class Document::Generate::ByCount 
 
-  attr_reader :documents
-
   def initialize
-    # 生成された文書群
-    @documents=[] #=>Document::UnitDocument.obj
   end
-
 
   # 要求された件数のTweetをまとめた文書を複数個作る
   # 要求が100件であれば,3200/100=32個文書を生成する
@@ -14,6 +9,7 @@ class Document::Generate::ByCount
     # 生成されるドキュメント数
     division_count = Tweet.find_by_user(user_id).count / request_count
 
+    whole_document = Document::WholeDocument.new()
     division_count.times do |div_times|
       # 既に取得した分の埋め合わせ
       offset   = request_count * div_times 
@@ -22,9 +18,9 @@ class Document::Generate::ByCount
       document = Document::UnitDocument.new(doc)
 
       # 文書群に登録
-      @documents[div_times]= document
+      whole_document.documents[div_times] = document
     end
-    return @documents
+    return whole_document
   end
 
 
