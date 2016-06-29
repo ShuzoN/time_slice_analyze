@@ -34,10 +34,16 @@ class Document::Document
   end
 
   # 形態素解析
+  # ブロックを渡すことで好きな処理をできる
+  # ブロックがない場合は, 解析結果を文字列で返す
   def morphological_analysis # 引数:Procオブジェクト
     org_txt = @org_txt.tr("<div_mark>"," ") 
-    @@mecab.parse(org_txt){|word| 
-      yield.call(word)
-    }
+    if block_given?
+      @@mecab.parse(org_txt){|word| 
+        yield.call(word)
+      }
+    else 
+      return @@mecab.parse(org_txt) #String
+    end
   end
 end
