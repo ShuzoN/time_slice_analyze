@@ -13,12 +13,19 @@ class Document::Generate::ByCount
     division_count.times do |div_times|
       # 既に取得した分の埋め合わせ
       offset   = request_count * div_times 
-      # 生成された文書を記録
+
+      # n件のTweetをまとめた文書を生成
       doc = generate_one_document(user_id, request_count ,offset)
+      doc = Document::Document.delete_url(doc)
       document = Document::UnitDocument.new(doc)
 
-      # 文書群に登録
-      whole_document.documents[div_times] = document
+      if document.org_txt!=""
+        # 文書中に含まれる単語の出現頻度を単語ごとに記録
+        document.count_nouns_frequency 
+
+        # 文書群に登録
+        whole_document.documents[div_times] = document
+      end
     end
     return whole_document
   end

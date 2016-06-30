@@ -1,5 +1,6 @@
 require 'bundler'
 Bundler.require
+require 'uri'
 
 class Main 
 
@@ -11,7 +12,7 @@ class Main
   def main
     # 要求件数毎にTweetをまとめた文書群を生成する
     # 引数 : (ユーザID, 文書に含めるTweet数)
-    whole_documents = @g_doc_by_count.generate_documents(3,100) 
+    whole_documents = @g_doc_by_count.generate_documents(3,300) 
   end
 
   # ----------------------------------------

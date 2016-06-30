@@ -1,7 +1,7 @@
 class Document::Document
   attr_accessor :org_txt \
-               ,:wakati_org_txt \
-               ,:num_of_all_words
+    ,:wakati_org_txt \
+    ,:num_of_all_words
 
   @@mecab = Natto::MeCab.new(dicdir:"/usr/local/Cellar/mecab/0.996/lib/mecab/dic/mecab-ipadic-neologd")
 
@@ -16,6 +16,17 @@ class Document::Document
     end
   end
 
+  def self.delete_url(str)
+    url = URI.extract(str,["http"])
+    url.concat URI.extract(str,["https"])
+    url.uniq!
+
+    url.each do |u|
+      str.delete! u
+    end
+    return str
+  end
+
   private 
 
   # 文書中の全単語数を計算
@@ -26,24 +37,10 @@ class Document::Document
   # 分かち書き文を生成
   def create_wakati
     return unless @wakati_org_txt==""
-    extract_word = Proc.new{|word|
+    @@mecab.parse(org_txt){|word| 
       # 分かち書きをする
       @wakati_org_txt << word.surface << " "
     }
-    morphological_analysis(){extract_word}
-  end
-
-  # 形態素解析
-  # ブロックを渡すことで好きな処理をできる
-  # ブロックがない場合は, 解析結果を文字列で返す
-  def morphological_analysis # 引数:Procオブジェクト
-    org_txt = @org_txt.tr("<div_mark>"," ") 
-    if block_given?
-      @@mecab.parse(org_txt){|word| 
-        yield.call(word)
-      }
-    else 
-      return @@mecab.parse(org_txt) #String
-    end
   end
 end
+
