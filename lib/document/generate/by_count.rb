@@ -22,19 +22,20 @@ class Document::Generate::ByCount
       if document.org_txt!=""
         # 文書中に含まれる単語の出現頻度を単語ごとに記録
         document.count_nouns_frequency 
-
         # 文書群に登録
         whole_document.documents[div_times] = document
       end
     end
+    # 全単語について出現する文書数を数える
+    whole_document.count_num_docs_contains_word
+    # 生成された文書数を数える
+    whole_document.count_num_generated_documents
     return whole_document
   end
-
 
   # 件数分のTweetをまとめた文書を1つ生成する
   def generate_one_document(user_id, request_count, offset)
     tweets_group = Tweet.group_by_count(user_id, request_count, offset)
     return  Tweet.to_d(tweets_group)
   end
-
 end
