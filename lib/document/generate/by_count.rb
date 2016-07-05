@@ -29,7 +29,7 @@ class Document::Generate::ByCount
     # 全単語について出現する文書数を数える
     whole_document.count_num_docs_contains_word
     # 生成された文書数を数える
-    whole_document.count_num_generated_documents
+    whole_document.count_num_all_documents
     return whole_document
   end
 
