@@ -3,7 +3,7 @@ Bundler.require
 require 'uri'
 
 class Main 
-
+  
   def initialize
     @crawler = TwitterConnection::Crawler.new
     @g_doc_by_count = Document::Generate::ByCount.new
@@ -12,13 +12,33 @@ class Main
   def main
     # 要求件数毎にTweetをまとめた文書群を生成する
     # 引数 : (ユーザID, 文書に含めるTweet数)
-    whole_documents = @g_doc_by_count.generate_documents(3,300) 
+    whole_documents = @g_doc_by_count.generate_documents(3,500) 
+
+    # idf値を計算する
+    num_all_docs = whole_documents.num_all_documents
+    num_docs_word_dic = whole_documents.num_of_docs_contain_word_dic
+    idf_dic = Method::Tfidf.calc_idf(num_all_docs, num_docs_word_dic)
+
+    # tf値を計算する
+    documents_tf = Array.new
+    whole_documents.documents.each_with_index do |doc,idx|
+      documents_tf[idx]= Method::Tfidf.calc_tf(doc.num_all_words, doc.nouns_frequency_dic)
+    end
+
+    # tfidf値を計算する
+    tfidf_dic = Array.new
+    documents_tf.each_with_index do |tf_dic,idx|
+      tfidf_dic[idx] = Method::Tfidf.calc_tf_idf(tf_dic,idf_dic)
+    end
+
+    # 文書ごとに特徴語を抽出する
+    Method::Tfidf.extract_feature_word(tfidf_dic)
   end
 
   # ----------------------------------------
-  private
+  # private
 
-  def acquire_tweets_and_store_db
+  def self.acquire_tweets_and_store_db
     # TwitterAPIから1ユーザのtweetを指定件数 取得
     tweets = @crawler.get_tweets(3200)
 

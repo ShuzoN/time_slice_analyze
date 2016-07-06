@@ -1,6 +1,6 @@
 class Document::WholeDocument < Document::Document
 
-  attr_accessor :num_of_docs_contain_noun, :documents, :num_of_documents
+  attr_accessor :num_of_docs_contain_word_dic, :documents, :num_all_documents
 
   def initialize()
     # 複数の文書をもつ文書群

@@ -1,6 +1,6 @@
 class Document::UnitDocument < Document::Document
 
-  attr_accessor :nouns_frequency_dic
+  attr_accessor :nouns_frequency_dic, :num_all_words
 
   def initialize(org_t="")
     # この文書中に含まれる単語の出現頻度を単語ごとに記録
