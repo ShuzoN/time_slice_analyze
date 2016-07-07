@@ -1,9 +1,8 @@
-require 'bundler'
+require "bundler"
 Bundler.require
-require 'uri'
+require "uri"
 
-class Main 
-  
+class Main
   def initialize
     @crawler = TwitterConnection::Crawler.new
     @g_doc_by_count = Document::Generate::ByCount.new
@@ -12,23 +11,26 @@ class Main
   def main
     # 要求件数毎にTweetをまとめた文書群を生成する
     # 引数 : (ユーザID, 文書に含めるTweet数)
-    whole_documents = @g_doc_by_count.generate_documents(3,500) 
+    whole_doc = @g_doc_by_count.generate_documents(3, 1000)
 
     # idf値を計算する
-    num_all_docs = whole_documents.num_all_documents
-    num_docs_word_dic = whole_documents.num_of_docs_contain_word_dic
-    idf_dic = Method::Tfidf.calc_idf(num_all_docs, num_docs_word_dic)
+    num_all_docs = whole_doc.num_all_documents
+    num_docs_word_dic = whole_doc.num_of_docs_contain_word_dic
+
+    idf_dic = \
+      Method::Tfidf.calc_idf(num_all_docs, num_docs_word_dic)
 
     # tf値を計算する
-    documents_tf = Array.new
-    whole_documents.documents.each_with_index do |doc,idx|
-      documents_tf[idx]= Method::Tfidf.calc_tf(doc.num_all_words, doc.nouns_frequency_dic)
+    documents_tf = []
+    whole_doc.documents.each_with_index do |doc, idx|
+      documents_tf[idx] = \
+        Method::Tfidf.calc_tf(doc.num_all_words, doc.nouns_frequency_dic)
     end
 
     # tfidf値を計算する
-    tfidf_dic = Array.new
-    documents_tf.each_with_index do |tf_dic,idx|
-      tfidf_dic[idx] = Method::Tfidf.calc_tf_idf(tf_dic,idf_dic)
+    tfidf_dic = []
+    documents_tf.each_with_index do |tf_dic, idx|
+      tfidf_dic[idx] = Method::Tfidf.calc_tf_idf(tf_dic, idf_dic)
     end
 
     # 文書ごとに特徴語を抽出する
