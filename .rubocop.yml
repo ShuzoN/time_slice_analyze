@@ -1,0 +1,9 @@
+inherit_from: .rubocop_todo.yml
+Style/AsciiComments:
+    Enabled: false
+AllCops:
+  Exclude:
+    - db/schema.rb
+    - 'vendor/**/*'
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
