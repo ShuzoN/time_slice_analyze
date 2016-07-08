@@ -16,6 +16,7 @@ class Document::Document
     end
   end
 
+  # urlを削除する
   def self.delete_url(str)
     url = URI.extract(str, ["http"])
     url.concat URI.extract(str, ["https"])
@@ -25,6 +26,10 @@ class Document::Document
       str.delete! u
     end
     str
+  end
+
+  # 絵文字を削除する
+  def self.remove_emoji(str)
   end
 
   private
