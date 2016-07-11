@@ -1,3 +1,4 @@
+require "parallel"
 class Document::Generate::ByCount
   def initialize
   end
@@ -9,20 +10,27 @@ class Document::Generate::ByCount
     division_count = Tweet.find_by_user(user_id).count / request_count
 
     whole_document = Document::WholeDocument.new
-    division_count.times do |div_times|
-      # 既に取得した分の埋め合わせ
-      offset = request_count * div_times
+    locker = Mutex::new
 
-      # n件のTweetをまとめた文書を生成
-      doc = generate_one_document(user_id, request_count, offset)
-      doc = Document::Document.delete_url(doc)
-      document = Document::UnitDocument.new(doc)
+    Parallel.each([0], in_threads: 8) do
+      division_count.times do |div_times|
+        # 既に取得した分の埋め合わせ
+        offset = request_count * div_times
 
-      next unless document.org_txt != ""
-      # 文書中に含まれる単語の出現頻度を単語ごとに記録
-      document.count_nouns_frequency
-      # 文書群に登録
-      whole_document.documents[div_times] = document
+        # n件のTweetをまとめた文書を生成
+        doc = generate_one_document(user_id, request_count, offset)
+        doc = Document::Document.delete_url(doc)
+        document = Document::UnitDocument.new(doc)
+
+        next unless document.org_txt != ""
+        # 文書中に含まれる単語の出現頻度を単語ごとに記録
+        document.count_nouns_frequency
+        # 文書群に登録
+        locker.synchronize do
+          # このブロック内は必ず同時に一つのスレッドしか処理しない
+          whole_document.documents[div_times] = document
+        end
+      end
     end
     # 全単語について出現する文書数を数える
     whole_document.count_num_docs_contains_word
@@ -36,4 +44,5 @@ class Document::Generate::ByCount
     tweets_group = Tweet.group_by_count(user_id, request_count, offset)
     Tweet.to_d(tweets_group)
   end
+
 end

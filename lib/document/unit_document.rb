@@ -17,7 +17,7 @@ class Document::UnitDocument < Document::Document
       next if NKF.nkf("-m0Z1 -W -w", word.surface) =~ /\w/
       # 絵文字の除去
       # next if @@emoji.dic.include?(word.surface.to_i(16))
-      puts word.surface.pack("U*").each{|word_cp| word_cp.to_i(16)}
+      # puts word.surface.pack("U*").each{|word_cp| word_cp.to_i(16)}
       @nouns_frequency_dic[word.surface.to_sym] += 1
     end
   end

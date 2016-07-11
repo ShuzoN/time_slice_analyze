@@ -10,9 +10,10 @@ class Main
   end
 
   def main
+    before = Time.now()
     # 要求件数毎にTweetをまとめた文書群を生成する
     # 引数 : (ユーザID, 文書に含めるTweet数)
-    whole_doc = @g_doc_by_count.generate_documents(3, 1000)
+    whole_doc = @g_doc_by_count.generate_documents(3, 100)
 
     # idf値を計算する
     num_all_docs = whole_doc.num_all_documents
@@ -33,23 +34,23 @@ class Main
     documents_tf.each_with_index do |tf_dic, idx|
       tfidf_dic[idx] = Method::Tfidf.calc_tf_idf(tf_dic, idf_dic)
     end
-
     # 文書ごとに特徴語を抽出する
     Method::Tfidf.extract_feature_word(tfidf_dic)
+    puts Time.now()-before
   end
+end
 
-  # ----------------------------------------
-  # private
+# ----------------------------------------
+# private
 
-  def self.acquire_tweets_and_store_db
-    # TwitterAPIから1ユーザのtweetを指定件数 取得
-    tweets = @crawler.get_tweets(3200)
+def self.acquire_tweets_and_store_db
+  # TwitterAPIから1ユーザのtweetを指定件数 取得
+  tweets = @crawler.get_tweets(3200)
 
-    # DBに取得データを保存
-    user = tweets.first["user"]
-    User.store_db(user)
-    Tweet.store_db(tweets)
-  end
+  # DBに取得データを保存
+  user = tweets.first["user"]
+  User.store_db(user)
+  Tweet.store_db(tweets)
 end
 
 # クローラを使いDBにTweetを追加する
