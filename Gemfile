@@ -63,3 +63,6 @@ gem "oauth", "~> 0.4.7"
 
 # Mecabのrubyバインディング
 gem "natto"
+
+# 並列処理
+gem "parallel"
