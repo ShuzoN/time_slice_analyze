@@ -1,6 +1,7 @@
 require "bundler"
 Bundler.require
 require "uri"
+require "nkf"
 
 class Main
   def initialize

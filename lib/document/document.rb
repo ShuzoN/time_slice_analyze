@@ -4,6 +4,7 @@ class Document::Document
     , :num_of_all_words
 
   @@mecab = Natto::MeCab.new(dicdir: "/usr/local/Cellar/mecab/0.996/lib/mecab/dic/mecab-ipadic-neologd")
+  @@emoji = Dic::Emoji.new        # 絵文字の辞書
 
   def initialize(org_t = "")
     @org_txt = org_t              # 原文
@@ -12,7 +13,7 @@ class Document::Document
     @result_morpho_analysis # 形態素解析の結果
     unless org_t == ""
       count_all_words
-      create_wakati
+      # create_wakati
     end
   end
 
