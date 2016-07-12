@@ -1,5 +1,7 @@
 require "parallel"
+require "thread"
 class Document::Generate::ByCount
+
   def initialize
   end
 
@@ -12,25 +14,28 @@ class Document::Generate::ByCount
     whole_document = Document::WholeDocument.new
     locker = Mutex::new
 
-    Parallel.each([0], in_threads: 8) do
-      division_count.times do |div_times|
-        # 既に取得した分の埋め合わせ
-        offset = request_count * div_times
+    processer_count = Parallel.processor_count # CPUコア取得
+    division_count  = Array.new(division_count) { |idx| idx }
 
-        # n件のTweetをまとめた文書を生成
-        doc = generate_one_document(user_id, request_count, offset)
-        doc_rm_url = Document::Document.delete_url(doc)
-        document = Document::UnitDocument.new(doc_rm_url)
+    # 並行処理
+    # n件のTweetをまとめた文書を生成し,
+    # 生成した文書を1つの全文書オブジェクトにまとめる
+    Parallel.each(division_count, in_threads: processer_count) do |div_times|
+      # 既に取得した分の埋め合わせ
+      offset = request_count * div_times
 
-        next unless document.org_txt != ""
-        # 文書中に含まれる単語の出現頻度を単語ごとに記録
-        document.count_nouns_frequency
-        # 文書群に登録
-        locker.synchronize do
-          # このブロック内は必ず同時に一つのスレッドしか処理しない
-          whole_document.documents[div_times] = document
-        end
+      # n件のTweetをまとめた文書を生成
+      doc = generate_one_document(user_id, request_count, offset)
+      doc_rm_url = Document::Document.delete_url(doc)
+      document = Document::UnitDocument.new(doc_rm_url)
 
+      next unless document.org_txt != ""
+      # 文書中に含まれる単語の出現頻度を単語ごとに記録
+      document.count_nouns_frequency
+      # 文書群に登録
+      locker.synchronize do
+        # このブロック内は必ず同時に一つのスレッドしか処理しない
+        whole_document.documents[div_times] = document
       end
     end
     # 全単語について出現する文書数を数える
