@@ -19,8 +19,8 @@ class Document::Generate::ByCount
 
         # n件のTweetをまとめた文書を生成
         doc = generate_one_document(user_id, request_count, offset)
-        doc = Document::Document.delete_url(doc)
-        document = Document::UnitDocument.new(doc)
+        doc_rm_url = Document::Document.delete_url(doc)
+        document = Document::UnitDocument.new(doc_rm_url)
 
         next unless document.org_txt != ""
         # 文書中に含まれる単語の出現頻度を単語ごとに記録
@@ -30,6 +30,7 @@ class Document::Generate::ByCount
           # このブロック内は必ず同時に一つのスレッドしか処理しない
           whole_document.documents[div_times] = document
         end
+
       end
     end
     # 全単語について出現する文書数を数える
