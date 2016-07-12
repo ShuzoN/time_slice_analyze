@@ -17,8 +17,9 @@ class Dic::Emoji
 
     # 辞書の生成
     emoji_txt.each_line do |em|
+      next  if em.chr.nil? || em.chr == ""
       break if em.chr == "EOF".chr
-      dic << em.split(";")[0]
+      dic << em.split(";")[0].strip.to_sym
     end
     dic
   end
