@@ -1,7 +1,7 @@
 require "bundler"
 Bundler.require
 
-class Main
+class FormatEmojiDic
   def main
     # 絵文字の辞書ファイルを開く
     emoji_dic_location = \
@@ -47,4 +47,4 @@ class Main
   end
 end
 
-Main.new.main
+FormatEmojiDic.new.main
