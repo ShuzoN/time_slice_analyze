@@ -1,30 +1,26 @@
 require "bundler"
 Bundler.require
 
+# 生成した絵文字辞書の生成
 class FormatEmojiDic
+  # 生成した絵文字辞書の生成
   def main
-    # 絵文字の辞書ファイルを開く
-    emoji_dat_locate = File.expand_path(
-      "../../../config/dictionary/emoji_data.txt", __FILE__)
-    emoji_seq_locate = File.expand_path(
-      "../../../config/dictionary/emoji_sequences.txt", __FILE__)
-    emoji_zwj_locate = File.expand_path( 
-      "../../../config/dictionary/emoji_zwj_sequences.txt", __FILE__)
+    dic_path = "../../../config/dictionary"
+    emoji_files = file_open_for_emoji(dic_path)
 
-    emoji_data_dic = File.open(emoji_dat_locate, "r").read
-    emoji_seq_dic  = File.open(emoji_seq_locate, "r").read
-    emoji_zwj_dic  = File.open(emoji_zwj_locate, "r").read
+    data_dic = emoji_files[0]
+    seq_dic  = emoji_files[1]
+    zwj_dic  = emoji_files[2]
 
-    # 絵文字辞書(unicode codepoint:16進数)
-    emoji_dic = []
+    # 絵文字の辞書を生成
+    emoji_dic =  format_emoji_dic_for_data(data_dic)
+    emoji_dic << format_emoji_dic_for_seq(seq_dic)
+    emoji_dic << format_emoji_dic_for_seq(zwj_dic)
 
-    # 1つの16進数からなる絵文字の辞書を生成
-    emoji_dic =  format_emoji_dic_for_data(emoji_data_dic)
-
-    # 複数の16進数からなる絵文字の辞書を生成
-    emoji_dic << format_emoji_dic_for_seq(emoji_seq_dic)
-    emoji_dic << format_emoji_dic_for_seq(emoji_zwj_dic)
-    
+    # 整形した絵文字辞書を書き込み
+    formated_emoji = File.expand_path( 
+      dic_path + "/formated_emoji.txt", __FILE__)
+    File.open(formated_emoji, "w").write(emoji_dic.join(","))
   end
 
   # 1つの16進数からなる絵文字の辞書を生成
@@ -67,6 +63,22 @@ class FormatEmojiDic
       dic << format("%04x", cp).upcase
     end
   end
-end
 
-FormatEmojiDic.new.main
+  def file_open_for_emoji(dic_path)
+    # 絵文字の辞書ファイルを開く
+    emoji_dat_locate = File.expand_path(
+      dic_path + "/emoji_data.txt", __FILE__)
+
+    emoji_seq_locate = File.expand_path(
+      dic_path + "/emoji_sequences.txt", __FILE__)
+
+    emoji_zwj_locate = File.expand_path( 
+      dic_path + "/emoji_zwj_sequences.txt", __FILE__)
+
+    data_dic = File.open(emoji_dat_locate, "r").read
+    seq_dic  = File.open(emoji_seq_locate, "r").read
+    zwj_dic  = File.open(emoji_zwj_locate, "r").read
+
+    [data_dic, seq_dic, zwj_dic]
+  end
+end
