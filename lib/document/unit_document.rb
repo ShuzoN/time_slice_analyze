@@ -22,6 +22,8 @@ class Document::UnitDocument < Document::Document
       # 絵文字の除去
       utf_code = Dic::Emoji.convert_utf_code(surface)
       next if @@emoji.dic.include?(utf_code)
+      # 1文字ひらがなの除去
+      next if detect_one_char_hiragana(surface)
       @nouns_frequency_dic[surface.to_sym] += 1
     end
   end

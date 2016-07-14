@@ -4,7 +4,10 @@ class Document::Document
     , :num_of_all_words
 
   @@mecab = Natto::MeCab.new(dicdir: "/usr/local/Cellar/mecab/0.996/lib/mecab/dic/mecab-ipadic-neologd")
-  @@emoji = Dic::Emoji.new        # 絵文字の辞書
+  # 絵文字の辞書
+  @@emoji = Dic::Emoji.new
+  # ひらがなのUnicodeコードポイント
+  @@hiragana = ("3040".to_i(16).."309F".to_i(16)).to_a
 
   def initialize(org_t = "")
     @org_txt = org_t              # 原文
@@ -29,8 +32,11 @@ class Document::Document
     str
   end
 
-  # 絵文字を削除する
-  def self.remove_emoji(str)
+  # 一文字のひらがなを検出する
+  def detect_one_char_hiragana(word)
+    w_cp = word.unpack("U*")
+    return nil if w_cp.size > 1
+    @@hiragana.include?(w_cp[0])
   end
 
   private
