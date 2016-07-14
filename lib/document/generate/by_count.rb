@@ -38,6 +38,18 @@ class Document::Generate::ByCount
         whole_document.documents[div_times] = document
       end
     end
+
+    # Tweetから取り出された名詞を全部ファイルに書き出す
+    f = File.open("./noun.txt", "w")
+    noun = []
+    docs = whole_document.documents
+    docs.each do |doc|
+      noun << doc.nouns_frequency_dic.keys
+    end
+    f.write(noun.flatten.join("\n"))
+    f.close
+
+
     # 全単語について出現する文書数を数える
     whole_document.count_num_docs_contains_word
     # 生成された文書数を数える
