@@ -3,6 +3,7 @@ class Document::Document
     , :wakati_org_txt \
     , :num_of_all_words
 
+  # 形態素解析機
   @@mecab = Natto::MeCab.new(dicdir: "/usr/local/Cellar/mecab/0.996/lib/mecab/dic/mecab-ipadic-neologd")
   # 絵文字の辞書
   @@emoji = Dic::Emoji.new
@@ -30,6 +31,22 @@ class Document::Document
       str.delete! u
     end
     str
+  end
+
+  # 絵文字を検知する
+  def detect_emoji(word)
+    utf_code = Dic::Emoji.convert_utf_code(word)
+    @@emoji.dic.include?(utf_code)
+  end
+
+  # 半角英数を検知する
+  def detect_half_alphanumeric(word)
+    convert_half_alphanum(word) =~ /\w/
+  end
+
+  # 全角->半角英数に変換する
+  def convert_half_alphanum(word)
+    NKF.nkf("-m0Z1 -W -w", word)
   end
 
   # 一文字のひらがなを検出する

@@ -18,10 +18,9 @@ class Document::UnitDocument < Document::Document
       # 特定の名詞のみを対象(一般, 固有名詞)
       next unless (41..47) === posid || 38 == word.posid
       # 半角英数の除去(全角 -> 半角英数変換)
-      next if NKF.nkf("-m0Z1 -W -w", surface) =~ /\w/
+      next if detect_half_alphanumeric(surface)
       # 絵文字の除去
-      utf_code = Dic::Emoji.convert_utf_code(surface)
-      next if @@emoji.dic.include?(utf_code)
+      next if detect_emoji(surface)
       # 1文字ひらがなの除去
       next if detect_one_char_hiragana(surface)
       @nouns_frequency_dic[surface.to_sym] += 1
