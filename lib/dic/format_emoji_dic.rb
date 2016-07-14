@@ -36,7 +36,7 @@ class FormatEmojiDic
         dic << dic_snippet if dic_snippet
 
       # 絵文字が単体で表記されている場合
-      elsif dic << emoji_unicode
+      elsif dic << emoji_unicode.to_i(16)
       end
     end
     dic.flatten!
@@ -48,7 +48,11 @@ class FormatEmojiDic
     emoji_seq_dic.lines.each do |emoji|
       emoji_unicode = emoji.split(/;/)[0].strip
       break if emoji_unicode == "EOF"
-      dic << emoji_unicode
+      emoji_cp = ""
+      emoji_unicode.split("\s").each do |e_uni|
+        emoji_cp << e_uni.to_i(16).to_s + " "
+      end
+      dic << emoji_cp.strip
     end
     dic
   end
@@ -60,7 +64,7 @@ class FormatEmojiDic
     uni_cp_first   = e_unicodes[0].to_i(16) # コードポイントに変換
     uni_cp_last    = e_unicodes[-1].to_i(16)
     (uni_cp_first..uni_cp_last).to_a.each do |cp|
-      dic << format("%04x", cp).upcase
+      dic << cp
     end
   end
 
@@ -82,3 +86,4 @@ class FormatEmojiDic
     [data_dic, seq_dic, zwj_dic]
   end
 end
+FormatEmojiDic.new.main
