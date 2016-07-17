@@ -1,0 +1,17 @@
+0000..007F; Basic Latin (ASCII)
+0080..00FF; Latin-1 Supplement
+0100..017F; Latin Extended-A
+0180..024F; Latin Extended-B
+2C60..2C7F; Latin Extended-C
+A720..A7FF; Latin EXtended-D
+AB30..AB6F; Latin Extended-E
+1E00..1EFF; Latin Extended Additional
+FB00..FB4F; Latin Ligatures 
+FF00..FFEF; Fullwidth Latin Letters
+0250..02AF; IPA Extensinos
+1D00..1D7F; Phonetic Extensions
+1D80..1DBF; Phonetic Extensions Supplement
+EOF
+
+-------------------
+http://www.unicode.org/charts/
