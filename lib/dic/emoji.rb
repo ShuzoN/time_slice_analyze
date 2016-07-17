@@ -12,7 +12,7 @@ class Dic::Emoji
     dic = [""]
     # 辞書ファイルの指定
     emoji_dic_location = File.expand_path(
-      "../../../config/dictionary/formated_emoji.txt", __FILE__)
+      "../../../config/dictionary/emoji/formated_emoji.txt", __FILE__)
     emoji_txt = File.open(emoji_dic_location, "r").read
 
     # 辞書の生成

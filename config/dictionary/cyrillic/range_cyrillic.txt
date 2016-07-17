@@ -1,0 +1,13 @@
+0400..04FF
+0500..052F
+2DE0..2DFF
+A640..A69F
+1C80..1C8F
+EOF
+
+-------------------
+Cyrillic
+Cyrillic Supplement
+Cyrillic Extended-A
+Cyrillic Extended-B
+Cyrillic Extended-C

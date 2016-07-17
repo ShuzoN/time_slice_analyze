@@ -5,7 +5,7 @@ Bundler.require
 class FormatEmojiDic
   # 生成した絵文字辞書の生成
   def main
-    dic_path = "../../../config/dictionary"
+    dic_path = "../../../config/dictionary/emoji"
     emoji_files = file_open_for_emoji(dic_path)
 
     data_dic = emoji_files[0]
