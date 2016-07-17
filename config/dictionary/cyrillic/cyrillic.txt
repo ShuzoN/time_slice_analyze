@@ -1,0 +1,9 @@
+0400..04FF; Cyrillic
+0500..052F; Cyrillic Supplement
+2DE0..2DFF; Cyrillic Extended-A
+A640..A69F; Cyrillic Extended-B
+1C80..1C8F; Cyrillic Extended-C
+EOF
+
+-------------------
+http://www.unicode.org/charts/

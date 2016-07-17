@@ -1,5 +1,23 @@
 # UTF8文字列の3byte16進数を整数に変換する
 module FormatCharDic::FormatDic
+
+  def shape_dictionary(dic_path, import_file, export_file)
+    file_cache = file_read(dic_path, import_file)
+
+    # 3byte, 範囲指定, 複数の3byteからなる文字をそれぞれ抽出
+    uni_single, uni_range, uni_multis = extract_unicode(file_cache)
+    dic = []
+    dic << format_3byte(uni_single)
+    dic << format_range(uni_range)
+    dic << format_multi_3byte(uni_multis)
+    dic.flatten!
+    dic.uniq!
+    
+    formated_dic = File.expand_path( \
+      dic_path + "/" + export_file, __FILE__)
+    File.open(formated_dic, "w").write(dic.join(","))
+  end
+
   # 3byte文字を処理
   def format_3byte(unicodes_hex)
     dic = []
