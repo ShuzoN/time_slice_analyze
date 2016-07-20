@@ -5,9 +5,12 @@ class Document::Document
 
   # 形態素解析機
   @@mecab = Natto::MeCab.new(dicdir: "/usr/local/Cellar/mecab/0.996/lib/mecab/dic/mecab-ipadic-neologd")
-  # 絵文字の辞書
-  @@emoji = Dic::Emoji.new
-  # ひらがなのUnicodeコードポイント
+  # 文字の辞書
+  @@emoji    = Dic::Emoji.new
+  @@cyrillic = Dic::Cyrillic.new
+  @@latin    = Dic::Latin.new
+  @@greek    = Dic::Greek.new
+  # ひらがなの辞書
   @@hiragana = ("3040".to_i(16).."309F".to_i(16)).to_a
 
   def initialize(org_t = "")
@@ -34,9 +37,27 @@ class Document::Document
   end
 
   # 絵文字を検知する
-  def detect_emoji(word)
+  def emoji?(word)
     utf_code = Dic::Emoji.convert_utf_code(word)
     @@emoji.dic.include?(utf_code)
+  end
+
+  # ラテン文字を検知する
+  def latin?(word)
+    utf_code = Dic::Latin.convert_utf_code(word)
+    @@latin.dic.include?(utf_code)
+  end
+
+  # キリル文字を検知する
+  def cyrillic?(word)
+    utf_code = Dic::Cyrillic.convert_utf_code(word)
+    @@cyrillic.dic.include?(utf_code)
+  end
+
+  # ギリシャ文字を検知する
+  def greek?(word)
+    utf_code = Dic::Greek.convert_utf_code(word)
+    @@greek.dic.include?(utf_code)
   end
 
   # 半角英数を検知する

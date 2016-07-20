@@ -19,8 +19,11 @@ class Document::UnitDocument < Document::Document
       next unless (41..47) === posid || 38 == word.posid
       # 半角英数の除去(全角 -> 半角英数変換)
       next if detect_half_alphanumeric(surface)
-      # 絵文字の除去
-      next if detect_emoji(surface)
+      # 絵文字, キリル, ラテン, ギリシャ文字の除去
+      next if emoji?(surface)
+      next if cyrillic?(surface)
+      next if latin?(surface)
+      next if greek?(surface)
       # 1文字ひらがなの除去
       next if detect_one_char_hiragana(surface)
       @nouns_frequency_dic[surface.to_sym] += 1
