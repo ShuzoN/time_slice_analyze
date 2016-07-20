@@ -1,0 +1,5 @@
+0370..03FF;   Greek and Coptic
+1F00..1FFF;   Greek Extended
+10140..1018F; Ancient Greek Numbers
+EOF
+
