@@ -41,7 +41,7 @@ class Document::Generate::ByCount
     end
 
     # Tweetから取り出された名詞を全部ファイルに書き出す
-    f = File.open("./noun.txt", "w")
+    f = File.open("./tmp/noun.txt", "w")
     noun = []
     docs = whole_document.documents
     docs.each do |doc|

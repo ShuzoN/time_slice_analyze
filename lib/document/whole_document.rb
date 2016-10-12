@@ -19,7 +19,7 @@ class Document::WholeDocument < Document::Document
         @num_of_docs_contain_word_dic[noun] += 1
       end
     end
-    file = File.open("./num_docs_contain_word.txt", "w+")
+    file = File.open("./tmp/num_docs_contain_word.txt", "w+")
     file.write(@num_of_docs_contain_word_dic)
   end
 
