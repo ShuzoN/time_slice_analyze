@@ -13,7 +13,7 @@ class Main
     before = Time.now()
     # 要求件数毎にTweetをまとめた文書群を生成する
     # 引数 : (ユーザID, 文書に含めるTweet数)
-    whole_doc = @g_doc_by_count.generate_documents(3, 100)
+    whole_doc = @g_doc_by_count.generate_documents(5, 100)
 
     # idf値を計算する
     num_all_docs = whole_doc.num_all_documents
@@ -38,7 +38,6 @@ class Main
     Method::Tfidf.extract_feature_word(tfidf_dic)
     puts Time.now()-before
   end
-end
 
 # ----------------------------------------
 # private
@@ -53,6 +52,7 @@ def self.acquire_tweets_and_store_db
   Tweet.store_db(tweets)
 end
 
+end
 # クローラを使いDBにTweetを追加する
 # 引数は取得するTweet件数
 Main.new.main
