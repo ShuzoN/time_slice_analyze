@@ -4,6 +4,10 @@ require "uri"
 require "nkf"
 
 class Main
+
+  USER_ID = 5
+  NUM_TWEETS_OF_ONE_SET = 100
+
   def initialize
     @crawler = TwitterConnection::Crawler.new
     @g_doc_by_count = Document::Generate::ByCount.new
@@ -13,7 +17,7 @@ class Main
     before = Time.now()
     # 要求件数毎にTweetをまとめた文書群を生成する
     # 引数 : (ユーザID, 文書に含めるTweet数)
-    whole_doc = @g_doc_by_count.generate_documents(5, 100)
+    whole_doc = @g_doc_by_count.generate_documents(USER_ID, NUM_TWEETS_OF_ONE_SET)
 
     # idf値を計算する
     num_all_docs = whole_doc.num_all_documents
@@ -35,7 +39,8 @@ class Main
       tfidf_dic[idx] = Method::Tfidf.calc_tf_idf(tf_dic, idf_dic)
     end
     # 文書ごとに特徴語を抽出する
-    Method::Tfidf.extract_feature_word(tfidf_dic)
+    #
+    Method::Tfidf.extract_feature_word(tfidf_dic, NUM_TWEETS_OF_ONE_SET)
     puts Time.now()-before
   end
 
