@@ -20,7 +20,8 @@ class Document::Generate::ByCount
     # 並行処理
     # n件のTweetをまとめた文書を生成し,
     # 生成した文書を1つの全文書オブジェクトにまとめる
-    Parallel.each(division_count, in_threads: processer_count) do |div_times|
+    # Parallel.each(division_count, in_threads: processer_count) do |div_times|
+    division_count.size.times do |div_times|
       # 既に取得した分の埋め合わせ
       offset = request_count * div_times
 
