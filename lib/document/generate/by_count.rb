@@ -7,9 +7,12 @@ class Document::Generate::ByCount
 
   # 要求された件数のTweetをまとめた文書を複数個作る
   # 要求が100件であれば,3200/100=32個文書を生成する
-  def generate_documents(user_id, request_count)
+  def generate_documents(user_id, request_count, overlap_point=1.0)
     # 生成されるドキュメント数
     division_count = Tweet.find_by_user(user_id).count / request_count
+
+    # 分割数 = 独立区間 / 重複区間の割合
+    division_count = division_count / overlap_point
 
     whole_document = Document::WholeDocument.new
     locker = Mutex::new
@@ -23,7 +26,7 @@ class Document::Generate::ByCount
     # Parallel.each(division_count, in_threads: processer_count) do |div_times|
     division_count.size.times do |div_times|
       # 既に取得した分の埋め合わせ
-      offset = request_count * div_times
+      offset = (request_count * overlap_point) * div_times 
 
       # n件のTweetをまとめた文書を生成
       doc = generate_one_document(user_id, request_count, offset)

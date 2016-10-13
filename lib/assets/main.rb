@@ -17,7 +17,12 @@ class Main
     before = Time.now()
     # 要求件数毎にTweetをまとめた文書群を生成する
     # 引数 : (ユーザID, 文書に含めるTweet数)
-    whole_doc = @g_doc_by_count.generate_documents(USER_ID, NUM_TWEETS_OF_ONE_SET)
+    whole_doc = Document::WholeDocument.new
+    # 前後の期間と重複させる割合
+    # 重複なしは'1'を指定する
+    overlap_point = 1.0/3.0
+    # overlap_point = 1.0
+    whole_doc = @g_doc_by_count.generate_documents(USER_ID, NUM_TWEETS_OF_ONE_SET, overlap_point)
 
     # idf値を計算する
     num_all_docs = whole_doc.num_all_documents
@@ -29,8 +34,7 @@ class Main
     # tf値を計算する
     documents_tf = []
     whole_doc.documents.each_with_index do |doc, idx|
-      documents_tf[idx] = \
-        Method::Tfidf.calc_tf(doc.num_all_words, doc.nouns_frequency_dic)
+      documents_tf[idx] = Method::Tfidf.calc_tf(doc.num_all_words, doc.nouns_frequency_dic)
     end
 
     # tfidf値を計算する
@@ -38,9 +42,9 @@ class Main
     documents_tf.each_with_index do |tf_dic, idx|
       tfidf_dic[idx] = Method::Tfidf.calc_tf_idf(tf_dic, idf_dic)
     end
+
     # 文書ごとに特徴語を抽出する
-    #
-    Method::Tfidf.extract_feature_word(tfidf_dic, NUM_TWEETS_OF_ONE_SET)
+    Method::Tfidf.extract_feature_word(tfidf_dic, NUM_TWEETS_OF_ONE_SET, overlap_point)
     puts Time.now()-before
   end
 

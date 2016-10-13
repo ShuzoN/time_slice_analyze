@@ -38,12 +38,12 @@ class Method::Tfidf
     tfidf_dic
   end
 
-  def self.extract_feature_word(tfidf_dic, num_tweets_of_one_set)
+  def self.extract_feature_word(tfidf_dic, num_tweets_of_one_set, overlap_point=1.0)
     sorted_tfidf_dic = {}
     tfidf_dic.each_with_index do |tf_idf, idx|
       # 期間数を計算(表示用)
-      begin_ctr = num_tweets_of_one_set * idx 
-      end_ctr   = num_tweets_of_one_set * (idx+1)
+      begin_ctr = num_tweets_of_one_set * overlap_point * idx 
+      end_ctr   = begin_ctr + num_tweets_of_one_set
       # 値でソートする(降順)
       sorted_tfidf_dic = tf_idf.sort_by { |_k, v| v }.reverse.take(10)
       puts "----------- doc #{begin_ctr} ~ #{end_ctr} -----------"
