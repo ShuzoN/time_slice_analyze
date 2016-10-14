@@ -66,3 +66,6 @@ gem "natto"
 
 # 並列処理
 gem "parallel"
+
+# レーベンシュタイン距離を扱う
+gem 'levenshtein', '~> 0.2.2'
