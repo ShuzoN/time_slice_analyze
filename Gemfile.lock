@@ -68,6 +68,7 @@ GEM
       hirb (~> 0.5)
       unicode-display_width (~> 0.1.1)
     i18n (0.7.0)
+    jaro_winkler (1.4.0)
     jbuilder (2.5.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -194,6 +195,7 @@ DEPENDENCIES
   dbd-sqlite3
   hirb
   hirb-unicode
+  jaro_winkler (~> 1.4)
   jbuilder (~> 2.0)
   jquery-rails
   levenshtein (~> 0.2.2)
