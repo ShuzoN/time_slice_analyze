@@ -40,14 +40,22 @@ class Method::Tfidf
 
   def self.extract_feature_word(tfidf_dic, num_tweets_of_one_set, overlap_point=1.0)
     sorted_tfidf_dic = {}
-    tfidf_dic.each_with_index do |tf_idf, idx|
-      # 期間数を計算(表示用)
-      begin_ctr = num_tweets_of_one_set * overlap_point * idx 
-      end_ctr   = begin_ctr + num_tweets_of_one_set
-      # 値でソートする(降順)
-      sorted_tfidf_dic = tf_idf.sort_by { |_k, v| v }.reverse.take(10)
-      puts "----------- doc #{begin_ctr} ~ #{end_ctr} -----------"
-      puts sorted_tfidf_dic
+    csv_cache = []
+    csv = CSV.generate do |csv|
+
+      tfidf_dic.each_with_index do |tf_idf, idx|
+        # 期間数を計算(表示用)
+        begin_ctr = num_tweets_of_one_set * overlap_point * idx 
+        end_ctr   = begin_ctr + num_tweets_of_one_set
+        # 値でソートする(降順)
+        sorted_tfidf_dic = tf_idf.sort_by { |_k, v| v }.reverse.take(10)
+        csv_cache << "--- doc #{begin_ctr} ~ #{end_ctr} ---"
+        csv_cache.concat(sorted_tfidf_dic.flatten)
+
+        csv << csv_cache
+        csv_cache = []
+      end
     end
+    return csv
   end
 end
