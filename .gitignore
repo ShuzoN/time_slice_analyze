@@ -21,3 +21,4 @@
 *.swp
 
 .rubocop_todo.yml
+/lib/test/testdb
