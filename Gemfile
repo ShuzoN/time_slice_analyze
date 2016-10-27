@@ -71,3 +71,6 @@ gem "parallel"
 gem 'levenshtein', '~> 0.2.2'
 # Jaro-Winker距離を扱う
 gem 'jaro_winkler', '~> 1.4'
+
+# 軽量KVS leveldb
+gem 'leveldb-ruby'
