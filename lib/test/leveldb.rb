@@ -13,7 +13,6 @@ class TfidfValueDB
 
       dbpath = "./lib/test/" + username
       @db = LevelDB::DB.new(dbpath)
-
     rescue ArgumentError=> ex 
       puts $@ + "  " + ex.inspect 
       exit 1
@@ -63,6 +62,16 @@ class TfidfValueDB
     end
   end
 
+  def delete(key)
+    begin
+      raise ArgumentError if !key.kind_of?(String)
+      @db.delete(key)
+    rescue ArgumentError=> ex
+      puts $@ + "  " + ex.inspect
+      exit 1
+    end
+  end
+
   def keys
     @db.keys
   end
@@ -80,13 +89,10 @@ strings.each.with_index do |key, sidx|
   test_hash.store(key, value)
 end
 
-
 db = TfidfValueDB.new("testdb")
 db.put("1", test_hash)
 p db.get("1")
+db.delete("1")
 
 p db.keys
-
-
-
 
