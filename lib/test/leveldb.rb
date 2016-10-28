@@ -14,8 +14,8 @@ class TfidfValueDB
       dbpath = "./lib/test/" + username
       @db = LevelDB::DB.new(dbpath)
 
-    rescue ArgumentError=> ex
-      puts __FILE__ + "  " + ex.inspect 
+    rescue ArgumentError=> ex 
+      puts $@ + "  " + ex.inspect 
       exit 1
     end
   end
@@ -26,17 +26,13 @@ class TfidfValueDB
   def put(org_key, value_hash)
     begin 
       key = org_key
-
-      if !org_key.kind_of?(String)
-        raise ArgumentError, "type error. require String. #{key.class}" 
-      elsif !value_hash.kind_of?(Hash)
-        raise ArgumentError, "type error. require Hash. #{value_hash.class}" 
-      end
+      raise ArgumentError if !org_key.kind_of?(String)
+      raise ArgumentError if !value_hash.kind_of?(Hash)
 
       @db[key] = value_hash.to_s
 
     rescue ArgumentError=> ex
-      puts __FILE__ + "  " + ex.inspect 
+      puts $@ + "  " + ex.inspect 
       exit 1
     end
   end
@@ -46,14 +42,12 @@ class TfidfValueDB
   # 戻り値 : Hash
   def get(key)
     begin 
-      if !key.kind_of?(String)
-        raise ArgumentError, "type error. require String. #{key.class}" 
-      end
+      raise ArgumentError if !key.kind_of?(String)
 
       # dbから値の取得
       result_value = @db[key]
 
-      raise KeyError, "#{key} has no value." unless result_value
+      raise KeyError unless result_value
 
 
       # dbから受け取ったデータをString -> Hash変換
@@ -64,7 +58,7 @@ class TfidfValueDB
       return result_hash
 
     rescue ArgumentError=> ex
-      puts __FILE__ + "  " + ex.inspect 
+      puts $@ + "  " + ex.inspect 
       exit 1
     end
   end
