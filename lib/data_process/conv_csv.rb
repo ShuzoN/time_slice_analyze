@@ -51,6 +51,9 @@ def conv_csv
 
     # 区切り文字の処理
     if line_str.match(/---/)
+      line_str.gsub!(/-|doc|\.0/,"")
+      line_str.gsub!(/~/,":")
+      line_str.gsub!(/\s/,"")
       csv_line << "#{line_str}"
 
     # 10進数字の場合(tfidf値の場合)
