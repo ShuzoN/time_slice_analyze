@@ -19,3 +19,23 @@ def read_csv(filename)
     puts e.inspect; puts $@; exit 1
   end
 end
+
+def cut_interval(content)
+    csv_content = content
+    raise ArgumentError if !content.kind_of?(String)
+
+    # 区間ごとの内容
+    # ["0:100", ",保育士,0.0032\n,宇治原,0.0026\n...", "100:200",...]
+    separeted_details = csv_content.split(/(\d{1,4}:\d{1,4})/).rotate
+
+    separated_details_hash={}
+    separeted_details.each_slice(2) do |range, values|
+      break if !range.kind_of?(String) || !values.kind_of?(String)
+      separated_details_hash.store(range,values)
+    end
+    return separated_details_hash
+end
+
+filename = "tmp/tfidf_result_hashimoto_100.csv"
+tfidf_result = read_csv(filename)
+cut_interval(tfidf_result)
