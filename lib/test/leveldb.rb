@@ -73,26 +73,28 @@ class TfidfValueDB
   end
 
   def keys
-    @db.keys
+    @db.map do |k, v| k.force_encoding("utf-8") end
+  end
+
+  def values
+    @db.values
   end
 end
 
-
-
-strings = ["one", "two", "three", "four", "five", "six", "seven", "eight", "night","ten"]
-values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-test_hash = Hash.new
-
-strings.each.with_index do |key, sidx|
-  value = values[sidx] 
-  test_hash.store(key, value)
-end
-
-db = TfidfValueDB.new("testdb")
-db.put("1", test_hash)
-p db.get("1")
-db.delete("1")
-
-p db.keys
-
+# usage
+# keywords = ["バイブル", "テクノロジ", "サイクル", "選挙"]
+# word1_tfidf = {"100:200"=>0.0023, "200:300"=>0.00356, "300:400"=>0.00456}
+# word2_tfidf = {"100:200"=>0.0223, "200:300"=>0.02252, "300:400"=>0.01456}
+# word3_tfidf = {"100:200"=>0.0531, "200:300"=>0.00450, "300:400"=>0.00562}
+# word4_tfidf = {"100:200"=>0.0823, "200:300"=>0.00474, "300:400"=>0.04456}
+# value = [word1_tfidf,word2_tfidf,word3_tfidf,word4_tfidf]
+#
+# db = TfidfValueDB.new("testdb")
+#
+# keywords.each.with_index do |key, sidx|
+#   db.put(key, value[sidx])
+# end
+#
+# p db.get("サイクル")
+# p db.keys
+# p db.values
