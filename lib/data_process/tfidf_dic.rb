@@ -20,27 +20,28 @@ def read_csv(filename)
   end
 end
 
+# 区間ごとの内容を切り出す
+# Key: 区間 , Value : 単語=>tfidfのhash
 def cut_interval(content)
     csv_content = content
     raise ArgumentError if !content.kind_of?(String)
 
-    # 区間ごとの内容
-    # ["0:100", ",保育士,0.0032\n,宇治原,0.0026\n...", "100:200",...]
     separeted_details = csv_content.split(/(\d{1,4}:\d{1,4})/).rotate
 
-    separated_details_hash={}
+    interval_words_tfidf={}
     separeted_details.each_slice(2) do |range, values|
       break if !range.kind_of?(String) || !values.kind_of?(String)
-      separated_details_hash.store(range,values)
+      word_tfidf = values.scan(/,([^,.]*),(\d.\d+)\n/).to_h
+      interval_words_tfidf.store(range, word_tfidf)
     end
-    return separated_details_hash
+    return interval_words_tfidf
 end
 
 # 単語が含まれている区間を検索する
 def included_interval(keyword, seperated_interval)
   intervals = []
-  seperated_interval.each do |interval, values|
-    intervals << interval if values[/#{keyword},(\d.\d+)\n/]
+  seperated_interval.each do |interval, words|
+    intervals << interval if words.has_key?(keyword)
   end
   return intervals
 end
@@ -51,8 +52,9 @@ end
 # [[区間1, tfidf値],[区間2, tfidf値],...]
 def value_assoc(keyword, seperated_interval)
   resultset= []
-  seperated_interval.each do |interval, values|
-    if tfidf = values[/#{keyword},(\d.\d+)\n/,1]
+  seperated_interval.each do |interval, words|
+    if words.has_key?(keyword)
+      tfidf = words[keyword]
       resultset.push([interval, tfidf]) 
     end
   end
