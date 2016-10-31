@@ -36,6 +36,31 @@ def cut_interval(content)
     return separated_details_hash
 end
 
+# 単語が含まれている区間を検索する
+def included_interval(keyword, seperated_interval)
+  intervals = []
+  seperated_interval.each do |interval, values|
+    intervals << interval if values[/#{keyword},(\d.\d+)\n/]
+  end
+  return intervals
+end
+
+
+# 単語が含まれている区間を検索し, 
+# 区間とtfidf値の対で取得する
+# [[区間1, tfidf値],[区間2, tfidf値],...]
+def value_assoc(keyword, seperated_interval)
+  resultset= []
+  seperated_interval.each do |interval, values|
+    if tfidf = values[/#{keyword},(\d.\d+)\n/,1]
+      resultset.push([interval, tfidf]) 
+    end
+  end
+  return resultset
+end
+
 filename = "tmp/tfidf_result_hashimoto_100.csv"
 tfidf_result = read_csv(filename)
-cut_interval(tfidf_result)
+seperated_interval = cut_interval(tfidf_result)
+p included_interval("党大会", seperated_interval)
+p value_assoc("党大会", seperated_interval)
