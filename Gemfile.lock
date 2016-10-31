@@ -77,6 +77,7 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.3)
+    leveldb-ruby (0.15)
     levenshtein (0.2.2)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
@@ -198,6 +199,7 @@ DEPENDENCIES
   jaro_winkler (~> 1.4)
   jbuilder (~> 2.0)
   jquery-rails
+  leveldb-ruby
   levenshtein (~> 0.2.2)
   natto
   oauth (~> 0.4.7)
@@ -217,4 +219,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
