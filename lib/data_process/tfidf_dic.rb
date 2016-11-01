@@ -1,5 +1,6 @@
 require 'pathname'
 
+class ConvCsvToTfidf
 # csvファイルを読み込んで, 文字列を返す
 def read_csv(filename)
   begin
@@ -74,9 +75,12 @@ def value_assoc(keyword, seperated_interval)
   end
   return resultset
 end
+end
 
-filename = "tmp/tfidf_result_hashimoto_100.csv"
-tfidf_result = read_csv(filename)
-seperated_interval = cut_interval(tfidf_result)
-p included_interval("メルマガ", seperated_interval)
-p value_assoc("メルマガ", seperated_interval)
+# usage
+# filename = "tmp/tfidf_result_hashimoto_100.csv"
+# conv_tfidf = ConvCsvToTfidf.new
+# tfidf_result = conv_tfidf.read_csv(filename)
+# seperated_interval = conv_tfidf.cut_interval(tfidf_result)
+# p conv_tfidf.included_interval("メルマガ", seperated_interval)
+# p conv_tfidf.value_assoc("メルマガ", seperated_interval)
