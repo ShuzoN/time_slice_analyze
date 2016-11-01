@@ -3,15 +3,16 @@ require "bundler"
 Bundler.require
 require 'leveldb'
 
-class TfidfValueDB
+class DataProcess::TfidfDB
 
   # ユーザ名に合わせたKVSDBの作成
-  def initialize(username)
+  def initialize(username:"hashimoto", interval: 100 )
     begin
       # 引数の型チェック
       raise ArgumentError if !username.kind_of?(String)
+      raise ArgumentError if !interval.kind_of?(Numeric)
 
-      dbpath = "./lib/test/" + username
+      dbpath = "./tmp/" + username + "_" + interval.to_s
       @db = LevelDB::DB.new(dbpath)
     rescue ArgumentError=> ex 
       puts $@ + "  " + ex.inspect 

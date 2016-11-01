@@ -1,7 +1,11 @@
 require 'pathname'
 
-class ConvCsvToTfidf
+class DataProcess::ConvCsvToTfidf
 # csvファイルを読み込んで, 文字列を返す
+
+def initialize
+end
+
 def read_csv(filename)
   begin
     # 引数で渡されたファイルパスを基に
@@ -23,7 +27,6 @@ end
 
 # 区間ごとの内容を切り出す
 # 区間=>{単語=>tfidf}という2段組のHashを生成する
-
 def cut_interval(content)
   begin
     csv_content = content
@@ -61,6 +64,15 @@ def included_interval(keyword, seperated_interval)
   return intervals
 end
 
+# CSVに含まれる全単語を返す
+# 区間ごとに区切る
+# [[a1,b1,c1,...],[a2,b2,c2,...]]
+def words(seperated_interval)
+  words = seperated_interval.map do |interval, intv_words|
+    intv_words.keys
+  end
+  return words
+end
 
 # 単語が含まれている区間を検索し, 
 # 区間とtfidf値の対を返す
