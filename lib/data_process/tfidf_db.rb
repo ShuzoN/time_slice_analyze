@@ -17,7 +17,7 @@ module DataProcess
       @db = LevelDB::DB.new(dbpath)
     rescue ArgumentError => e
       puts e.inspect
-      puts $@
+      puts $ERROR_POSITION
       exit 1
     end
 
@@ -30,7 +30,7 @@ module DataProcess
       @db[key] = interval_value.to_s
     rescue ArgumentError => e
       puts e.inspect
-      puts $@
+      puts $ERROR_POSITION
       exit 1
     end
 
@@ -50,7 +50,7 @@ module DataProcess
       return result_hash
     rescue ArgumentError => e
       puts e.inspect
-      puts $@
+      puts $ERROR_POSITION
       exit 1
     end
 
@@ -59,7 +59,7 @@ module DataProcess
       @db.delete(key)
     rescue ArgumentError => e
       puts e.inspect
-      puts $@
+      puts $ERROR_POSITION
       exit 1
     end
 
@@ -103,4 +103,3 @@ end
 # filename = "tmp/tfidf_result_hashimoto_100.csv"
 # d = DataProcess::TfidfDB.new(username: "hashimoto", interval: 100)
 # d.store_db_from_csv(filename)
-
