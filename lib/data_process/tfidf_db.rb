@@ -6,6 +6,8 @@ require "leveldb"
 module DataProcess
   # {単語=>{区間=>tfidf値}でtfidf値を記録するDB
   class TfidfDB
+    attr_reader :username, :interval, :allwords
+
     # ユーザ名に合わせたKVSDBの作成
     def initialize(username: "", interval: 0)
       # 引数の型チェック
@@ -13,6 +15,7 @@ module DataProcess
       raise ArgumentError if !interval.is_a?(Integer) || interval.zero?
       @username = username
       @interval = interval
+      @allwords = []
       dbpath = "./tmp/" + username + "_" + interval.to_s
       @db = LevelDB::DB.new(dbpath)
     rescue ArgumentError => e
@@ -82,11 +85,11 @@ module DataProcess
       seperated_interval = conv_csv_tfidf.cut_interval(tfidf_csv)
 
       # 全区間の全単語を取得
-      all_words = conv_csv_tfidf.words(seperated_interval)
+      @allwords = conv_csv_tfidf.words(seperated_interval)
 
       # {単語=>{区間=>tfidf}}の形でデータを整形
       words_separated_interval = {}
-      all_words.flatten.uniq.each do |word|
+      @allwords.flatten.uniq.each do |word|
         interval_tfidf = conv_csv_tfidf.value_assoc(word, seperated_interval).to_h
         words_separated_interval.store(word, interval_tfidf)
       end
