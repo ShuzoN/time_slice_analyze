@@ -15,7 +15,7 @@ module DataProcess
       raise ArgumentError if !interval.is_a?(Integer) || interval.zero?
       @username = username
       @interval = interval
-      @allwords = []
+      @allwords =  File.exist?(allwords_filename) ? read_allwords : []
       dbpath = "./tmp/" + username + "_" + interval.to_s
       @db = LevelDB::DB.new(dbpath)
     rescue ArgumentError => e
@@ -99,6 +99,22 @@ module DataProcess
         put(key, interval_value)
       end
     end
+
+    def write_allwords
+      raise if @allwords.empty?
+      File.open(allwords_filename, 'w') do |file|
+        file.write(@allwords.to_s)
+      end
+    end
+
+    def read_allwords
+      return eval(File.read(allwords_filename))
+    end
+
+    def allwords_filename
+      return "tmp/" + "allwords_" + @username + "_" + @interval.to_s + ".txt"
+    end
+
   end
 
   class TfidfDBs
