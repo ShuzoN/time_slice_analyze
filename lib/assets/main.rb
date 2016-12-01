@@ -15,20 +15,53 @@ class Main
   end
 
   def main
-    before = Time.now()
+    overlap = 1
+    argv = ARGV.dup
+
+    if idx = argv.index("--overlap") 
+      idx = idx.next
+      raise "please enter overlap point in number" if argv[idx].nil?
+      ol = argv[idx][/\d/]
+      raise "please enter overlap point bigger than 0" unless ol.to_i > 0
+      overlap = ol.to_i
+    end
+
+    msg = "please choose mode by command line | -t(tfidf) or -e(entropy)"
+    raise msg unless ARGV.grep(/-tfidf|-entropy/)
+
+    if argv.index("--ttidf")
+      tfidf(overlap)
+    elsif argv.index("--entropy")
+      entropy(overlap)
+    end
+
+  rescue => e
+    puts e.inspect
+    puts $ERROR_POSITION
+  end
+
+  def entropy(overlap)
+  end
+
+  def slice_tweets_by_count(overlap)
     # 要求件数毎にTweetをまとめた文書群を生成する
     # 引数 : (ユーザID, 文書に含めるTweet数)
     whole_doc = Document::WholeDocument.new
     # 前後の期間と重複させる割合
     # 重複なしは'1'を指定する
-    overlap_point = 1.0/3.0
-    # overlap_point = 1.0
-    whole_doc = @g_doc_by_count.generate_documents(USER_ID, NUM_TWEETS_OF_ONE_SET, overlap_point)
+    whole_doc = @g_doc_by_count.generate_documents(USER_ID, NUM_TWEETS_OF_ONE_SET, overlap)
 
-    # idf値を計算する
     num_all_docs = whole_doc.num_all_documents
     num_docs_word_dic = whole_doc.num_of_docs_contain_word_dic
 
+    return whole_doc, num_all_docs, num_docs_word_dic
+  end
+
+  def tfidf(overlap)
+    whole_doc, num_all_docs, num_docs_word_dic = slice_tweets_by_count(overlap)
+
+
+    # idf値を計算する
     idf_dic = \
       Method::Tfidf.calc_idf(num_all_docs, num_docs_word_dic)
 
