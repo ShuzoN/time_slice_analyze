@@ -1,5 +1,6 @@
 class Document::WholeDocument < Document::Document
-  attr_accessor :num_of_docs_contain_word_dic, :documents, :num_all_documents
+  attr_accessor :num_of_docs_contain_word_dic, :documents, :num_all_documents, :num_of_word_freq_all_doc
+
 
   def initialize
     # 複数の文書をもつ文書群
@@ -8,6 +9,8 @@ class Document::WholeDocument < Document::Document
     @num_all_documents = 0
     # ある単語が出現する文書数を単語ごとに記録
     @num_of_docs_contain_word_dic = Hash.new(0) # {:word=> num_docs}
+    # 全文書における単語の出現回数
+    @num_of_word_freq_all_doc = Hash.new(0) # {:word=> freq_in_all_docs}
   end
 
   # 全単語について出現する文書数を数える
@@ -28,5 +31,16 @@ class Document::WholeDocument < Document::Document
     num_docs = @documents.size
     return nil if  num_docs == 0
     @num_all_documents = num_docs
+  end
+
+  # 各単語について総出現回数を数える
+  def count_freq_each_word_in_all_doc
+    @documents.each do |doc|
+      doc.nouns_frequency_dic.each do |word, freq|
+        tmp_freq = @num_of_word_freq_all_doc[word] + freq
+        @num_of_word_freq_all_doc.store(word, tmp_freq)
+      end
+    end
+    return @num_of_word_freq_all_doc
   end
 end

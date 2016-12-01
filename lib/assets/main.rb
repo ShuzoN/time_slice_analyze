@@ -41,6 +41,27 @@ class Main
   end
 
   def entropy(overlap)
+    puts "<count num of words each document>\n\n"
+    # 文書集合, 
+    whole_doc, _, _ = slice_tweets_by_count(overlap)
+
+    puts "<calcurate tf value every words>\n\n"
+    # tf値を計算する
+    documents_tf = []
+    whole_doc.documents.each_with_index do |doc, idx|
+      documents_tf[idx] = Method::Tfidf.calc_tf(doc.num_all_words, doc.nouns_frequency_dic)
+    end
+
+    puts "<calcurate entropy every words>\n\n"
+    calc_entropy_about_word(whole_doc)
+    # 全単語の総出現回数を数える
+    whole_doc.count_freq_each_word_in_all_doc
+  end
+
+  # 単語ごとにエントロピーを計算する
+  def calc_entropy_about_word(whole_doc)
+    # 単語ごとの合計情報量
+    sum_plog2p = Hash.new(0)
   end
 
   def slice_tweets_by_count(overlap)
@@ -51,7 +72,9 @@ class Main
     # 重複なしは'1'を指定する
     whole_doc = @g_doc_by_count.generate_documents(USER_ID, NUM_TWEETS_OF_ONE_SET, overlap)
 
+    # 総文書数
     num_all_docs = whole_doc.num_all_documents
+    # 単語ごとの出現文書数
     num_docs_word_dic = whole_doc.num_of_docs_contain_word_dic
 
     return whole_doc, num_all_docs, num_docs_word_dic
@@ -59,7 +82,6 @@ class Main
 
   def tfidf(overlap)
     whole_doc, num_all_docs, num_docs_word_dic = slice_tweets_by_count(overlap)
-
 
     # idf値を計算する
     idf_dic = \
