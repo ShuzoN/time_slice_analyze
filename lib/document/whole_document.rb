@@ -9,7 +9,7 @@ class Document::WholeDocument < Document::Document
     @num_all_documents = 0
     # ある単語が出現する文書数を単語ごとに記録
     @num_of_docs_contain_word_dic = Hash.new(0) # {:word=> num_docs}
-    # 全文書における単語の出現回数
+    # 全文書における各単語の出現回数
     @num_of_word_freq_all_doc = Hash.new(0) # {:word=> freq_in_all_docs}
   end
 

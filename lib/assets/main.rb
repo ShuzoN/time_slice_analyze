@@ -53,15 +53,32 @@ class Main
     end
 
     puts "<calcurate entropy every words>\n\n"
-    calc_entropy_about_word(whole_doc)
     # 全単語の総出現回数を数える
     whole_doc.count_freq_each_word_in_all_doc
+    # エントロピー計算
+    p calc_entropy_about_word(whole_doc).sort_by{|_,v| -v}
   end
 
   # 単語ごとにエントロピーを計算する
   def calc_entropy_about_word(whole_doc)
-    # 単語ごとの合計情報量
-    sum_plog2p = Hash.new(0)
+    # 単語ごとのエントロピー
+    entropy_each_word = Hash.new(0.0)
+    # 全文書における各単語の出現回数
+    word_freq_all_doc = whole_doc.num_of_word_freq_all_doc
+
+    whole_doc.documents.each do |doc|
+      doc.nouns_frequency_dic.each do |word, freq|
+        # ある単語について 1文書中の出現回数/ 全文書中の総出現回数
+        probability = freq.to_f/word_freq_all_doc[word].to_f
+        next if probability.zero?
+
+        # 情報量plog2pを計算し, 加算する
+        pre_prob = entropy_each_word[word]
+        prob = pre_prob + -1 * probability * Math.log2(probability)
+        entropy_each_word.store(word, prob)
+      end
+    end
+    return entropy_each_word
   end
 
   def slice_tweets_by_count(overlap)
