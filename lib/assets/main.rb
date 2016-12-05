@@ -32,7 +32,7 @@ class Main
     if argv.index("--ttidf")
       tfidf(overlap)
     elsif argv.index("--entropy")
-      entropy(overlap)
+      entropy(overlap, 3)
     end
 
   rescue => e
@@ -40,9 +40,9 @@ class Main
     puts $ERROR_POSITION
   end
 
-  def entropy(overlap)
+  def entropy(overlap, continuous_appear_interval)
     puts "<count num of words each document>\n\n"
-    # 文書集合, 
+    # 文書集合を取得
     whole_doc, _, _ = slice_tweets_by_count(overlap)
 
     puts "<calcurate tf value every words>\n\n"
@@ -55,8 +55,49 @@ class Main
     puts "<calcurate entropy every words>\n\n"
     # 全単語の総出現回数を数える
     whole_doc.count_freq_each_word_in_all_doc
-    # エントロピー計算
-    p calc_entropy_about_word(whole_doc).sort_by{|_,v| -v}
+    # 単語ごとのエントロピー計算
+    entropy_each_word = calc_entropy_about_word(whole_doc)
+
+    # 文書ごとに単語のtf・エントロピー値を計算する
+    tf_ent_each_doc, tf_ent_allword = tf_entropy(documents_tf, entropy_each_word)
+    high_entropy_each_doc = []
+    tf_ent_each_doc.each do |tfen|
+      high_entropy_each_doc << tfen.sort_by{|_,v|-v}[0..10].to_h
+    end
+    p high_entropy_each_doc 
+
+    # 3区間以上で出現した単語を返す
+    p extract_continuous_word(tf_ent_allword, continuous_appear_interval)
+  end
+
+  # 複数区間で連続する単語を抽出する(entropy)
+  def extract_continuous_word(tf_ent_allword, num_consecutive_interval)
+    continuous_words = Hash.new(0)
+    tf_ent_allword.uniq.each do |word|
+      count = tf_ent_allword.count(word)
+      if count >= num_consecutive_interval
+        continuous_words.store(word, count)
+      end
+    end
+    return continuous_words
+  end
+
+  # tfエントロピー値を計算する
+  def tf_entropy(documents_tf, entropy_each_word)
+    # 単語ごとのtfエントロピー値
+    tf_entropy_result = []
+    # tfエントロピーで抽出された全単語(重複有り)
+    tf_ent_allwords = []
+    documents_tf.each do |doc_tf|
+      # 文書ごとのTF-entropy値
+      te = Hash.new(0.0)
+      doc_tf.each do |word, tf|
+        tf_ent_allwords << word
+        te.store(word.to_s, tf*entropy_each_word[word])
+      end
+      tf_entropy_result << te
+    end
+    return tf_entropy_result, tf_ent_allwords.flatten
   end
 
   # 単語ごとにエントロピーを計算する
@@ -66,6 +107,7 @@ class Main
     # 全文書における各単語の出現回数
     word_freq_all_doc = whole_doc.num_of_word_freq_all_doc
 
+    # エントロピーの計算
     whole_doc.documents.each do |doc|
       doc.nouns_frequency_dic.each do |word, freq|
         # ある単語について 1文書中の出現回数/ 全文書中の総出現回数
