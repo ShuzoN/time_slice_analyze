@@ -32,7 +32,7 @@ class Main
     if argv.index("--ttidf")
       tfidf(overlap)
     elsif argv.index("--entropy")
-      entropy(overlap, 3)
+      entropy(overlap, 6)
     end
 
   rescue => e
@@ -40,6 +40,8 @@ class Main
     puts $ERROR_POSITION
   end
 
+  # tfエントロピーを計算し, 
+  # 複数区間に渡って頻出する単語を抽出する
   def entropy(overlap, continuous_appear_interval)
     puts "<count num of words each document>\n\n"
     # 文書集合を取得
@@ -60,21 +62,24 @@ class Main
 
     # 文書ごとに単語のtf・エントロピー値を計算する
     tf_ent_each_doc, tf_ent_allword = tf_entropy(documents_tf, entropy_each_word)
+    # 各区間でエントロピーが高い順に単語を取得
     high_entropy_each_doc = []
+    high_entropy_allword = []
     tf_ent_each_doc.each do |tfen|
       high_entropy_each_doc << tfen.sort_by{|_,v|-v}[0..10].to_h
+      high_entropy_allword << tfen.sort_by{|_,v|-v}[0..10].to_h.keys
     end
-    p high_entropy_each_doc 
+    high_entropy_allword.flatten!
 
     # 3区間以上で出現した単語を返す
-    p extract_continuous_word(tf_ent_allword, continuous_appear_interval)
+    p extract_continuous_word(high_entropy_allword, continuous_appear_interval)
   end
 
   # 複数区間で連続する単語を抽出する(entropy)
-  def extract_continuous_word(tf_ent_allword, num_consecutive_interval)
+  def extract_continuous_word(allword, num_consecutive_interval)
     continuous_words = Hash.new(0)
-    tf_ent_allword.uniq.each do |word|
-      count = tf_ent_allword.count(word)
+    allword.uniq.each do |word|
+      count = allword.count(word)
       if count >= num_consecutive_interval
         continuous_words.store(word, count)
       end
