@@ -32,7 +32,7 @@ class Main
     if argv.index("--ttidf")
       tfidf(overlap)
     elsif argv.index("--entropy")
-      entropy(overlap, 6)
+      entropy(overlap, 3)
     end
 
   rescue => e
@@ -51,6 +51,7 @@ class Main
     # tf値を計算する
     documents_tf = []
     whole_doc.documents.each_with_index do |doc, idx|
+      p idx
       documents_tf[idx] = Method::Tfidf.calc_tf(doc.num_all_words, doc.nouns_frequency_dic)
     end
 
@@ -72,7 +73,38 @@ class Main
     high_entropy_allword.flatten!
 
     # 3区間以上で出現した単語を返す
-    p extract_continuous_word(high_entropy_allword, continuous_appear_interval)
+    continuous_words = extract_continuous_word(high_entropy_allword, continuous_appear_interval)
+    
+    puts "<output entropy result csv file>\n\n"
+    write_csv_for_entropy(continuous_words, high_entropy_each_doc, overlap)
+  end
+
+  # エントロピーで抽出した単語をCSV出力する
+  def write_csv_for_entropy(continuous_words, high_entropy_each_doc, overlap)
+    
+    csv = "\xEF\xBB\xBF"
+    # 抽出した全単語を繰り返す
+    continuous_words.keys.each do |word|
+      tmp_word_entropy_each_interval = []
+      high_entropy_each_doc.reverse_each.with_index do |words_in_a_doc,idx|
+         if words_in_a_doc.key?(word)
+           tmp_word_entropy_each_interval << words_in_a_doc[word]
+         else
+           tmp_word_entropy_each_interval << 0.0
+         end
+      end
+      csv << word + "," + tmp_word_entropy_each_interval.join(",") + "\n"
+    end
+
+    username = User.find(USER_ID).name
+    num_interval = NUM_TWEETS_OF_ONE_SET.to_s
+    prefix_path = "tmp/entropy/"
+    wf_path = prefix_path + "user_#{username}_inteval_#{num_interval}_overlap#{overlap}" + ".csv"
+    wf = File.open(wf_path,'w:UTF-16LE')
+    wf.write(csv)
+    wf.close
+
+    puts "the csv file was written at #{wf_path}"
   end
 
   # 複数区間で連続する単語を抽出する(entropy)
@@ -256,7 +288,7 @@ class Main
     return denominator
   end
 
-  def self.acquire_tweets_and_store_db
+  def acquire_tweets_and_store_db
     # TwitterAPIから1ユーザのtweetを指定件数 取得
     tweets = @crawler.get_tweets(3200)
 
@@ -267,6 +299,8 @@ class Main
   end
 
 end
+
 # クローラを使いDBにTweetを追加する
 # 引数は取得するTweet件数
+# Main.new.acquire_tweets_and_store_db
 Main.new.main
