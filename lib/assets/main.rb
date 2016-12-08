@@ -51,7 +51,6 @@ class Main
     # tf値を計算する
     documents_tf = []
     whole_doc.documents.each_with_index do |doc, idx|
-      p idx
       documents_tf[idx] = Method::Tfidf.calc_tf(doc.num_all_words, doc.nouns_frequency_dic)
     end
 
