@@ -7,7 +7,7 @@ require "csv"
 class Main
 
   USER_ID = 5
-  NUM_TWEETS_OF_ONE_SET = 100
+  NUM_TWEETS_OF_ONE_SET = 300
 
   def initialize
     @crawler = TwitterConnection::Crawler.new
@@ -32,7 +32,7 @@ class Main
     if argv.index("--ttidf")
       tfidf(overlap)
     elsif argv.index("--entropy")
-      entropy(overlap, 3)
+      entropy(overlap, 2)
     end
 
   rescue => e
