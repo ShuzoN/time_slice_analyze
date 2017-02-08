@@ -1,4 +1,13 @@
-## Tips
+### 実行環境について
+実行環境 : OS X El Capitan / mac book air 2013
+環境設定 : 
+ - rbenv 1.0.0
+ - bundler 1.13.6
+ - ruby 2.2.0 
+ - ruby on rails 4.2.1
+ - sqlite3 3.8.10.2(gem:1.3.11)
+ gemについてはGemfileを参照してください
+
 ### プログラムの実行
 
 Railsの環境でrubyのスクリプトを実行する
@@ -72,4 +81,73 @@ git 2.6.2
 # そこにgemの本体を配置する
 $ bundle install --path vendor/bundle --jobs=10
 ```
+
+
+### ディレクトリ構造
+.
+├── Gemfile
+├── Gemfile.lock
+├── README.md
+├── Rakefile
+├── app
+│   └── models
+├── bin
+│   ├── bundle
+│   ├── rails
+│   ├── rake
+│   ├── setup
+│   └── spring
+├── config
+│   ├── application.rb
+│   ├── boot.rb
+│   ├── database.yml
+│   ├── dictionary
+│   ├── environment.rb
+│   ├── environments
+│   ├── initializers
+│   ├── locales
+│   ├── routes.rb
+│   └── secrets.yml
+├── config.ru
+├── count_most_frequence_word_in_hashimoto_tweets.rb
+├── count_noun_per_month.rb
+├── count_noun_per_tw_count.rb
+├── db
+│   ├── development.sqlite3
+│   ├── migrate
+│   ├── schema.rb
+│   └── seeds.rb
+├── lib
+│   ├── assets
+│   ├── data_process
+│   ├── dic
+│   ├── document
+│   ├── format_char_dic
+│   ├── method
+│   ├── tasks
+│   ├── test
+│   └── twitter_connection
+├── log
+│   ├── -o.log
+│   └── development.log
+├── most_freq_noun_in_hashimoto_tweets.txt
+├── tags
+├── test
+│   ├── controllers
+│   ├── fixtures
+│   ├── helpers
+│   ├── integration
+│   ├── mailers
+│   ├── models
+│   └── test_helper.rb
+├── tmp
+│   ├── entropy
+│   ├── hashimoto_100
+│   ├── hashimoto_300
+│   ├── hashimoto_500
+│   ├── noun.txt
+│   └── num_docs_contain_word.txt
+└── vendor
+    ├── assets
+        └── bundle
 
