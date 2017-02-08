@@ -15,7 +15,7 @@ sqlite3 3.8.10.2(gem:1.3.11)
 
 環境設定が面倒だったら, [こちら](https://github.com/ShuzoN/rails_practice)を参照してください. 自動でubuntu14.04LTSがインストールされたVMが起動し, railsが動作するところまでは作ってくれるはず.   
 このプロジェクトを動かすことに関しては, [ここ](https://github.com/ShuzoN/time_slice_analyze)をgit cloneして, bundle installすれば多分動くと思う(謎). もちろんrails側でmigrateなどの処理は必要. railsがわからない場合は, dotinstallなどで簡単に学習するといい.  
-ハマったら調べてください. 環境設定の方法は僕も忘れました.  
+ハマったら調べてください. 
 
 1. homebrewの導入(macのみ)
   [本家サイト](http://brew.sh/index_ja.html)
@@ -90,19 +90,6 @@ lib以下に, 計算を行うプログラムを置いた.
 [ここを参考にした](http://qiita.com/azusanakano/items/885fe3236977580b00c9)  
 
 ---
-### プログラムの実行方法
----
-
-Railsの環境でrubyのスクリプトを実行する
-```
-# Rails環境下でrubyを実行(このコマンドは実際動作しないので注意)
-$ bundle exec rails runner lib/assets/main.rb
-
-# irb, ruby コマンドはRails環境を読まないため, 実行時にエラーになる
-$ bundle exec ruby lib/assets/main.rb #=> error
-```
-
----
 ### 自作スクリプトの利用
 ---
 Rails環境下で自作スクリプトを読みこませるには,   
@@ -126,3 +113,48 @@ end
 
 Rails本来の使い方としては, Appに共通するモジュールの自作に使う機能らしい.  
 
+---
+### プログラムの実行方法例
+---
+
+Railsの環境でrubyのスクリプトを実行する
+```
+# Rails環境下でrubyを実行(このコマンドは実際動作しないので注意)
+$ bundle exec rails runner lib/assets/main.rb
+
+# irb, ruby コマンドはRails環境を読まないため, 実行時にエラーになる
+$ bundle exec ruby lib/assets/main.rb #=> error
+```
+
+---
+### プログラムの実行
+---
+
+#### main関数
+```
+# 構文
+$ rails runner lib/assets/main.rb [--entropy] [--tfidf] [--overlap] 
+
+# 使用例(entropy, tfidfの同時使用は不可)
+$ rails runner lib/assets/main.rb --entropy --overlap 1
+$ rails runner lib/assets/main.rb --tfidf --overlap 2
+
+※ 対象とするUserのDB内のIDや, 1文書に含める投稿数はソース内で指定する
+```
+
+オプション
+
+|オプション|意味|
+|-:-|-:-|
+|--entropy|エントロピーを計算するモード|
+|--tfidf|tfidfを計算するモード|
+|--overlap|重複区間を指定する. 1は重複なし, 2は1/2区間重複を意味する|
+
+#### tweetのcrawler
+ツイートを収集し, DBに記録するためのプログラム
+```
+$ bundle exec rails runner lib/assets/tweet_crawler.rb
+```
+
+収集対象のユーザは, ``lib/twitter_connection/connecter.rb``内でTwitter上の``screen_name``を指定する.  
+取得投稿上限数は, ``limit``を変更.

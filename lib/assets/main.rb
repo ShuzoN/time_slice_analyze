@@ -7,10 +7,10 @@ require "csv"
 class Main
 
   USER_ID = 5
+  # 1文書あたりの投稿数
   NUM_TWEETS_OF_ONE_SET = 300
 
   def initialize
-    @crawler = TwitterConnection::Crawler.new
     @g_doc_by_count = Document::Generate::ByCount.new
   end
 
@@ -286,20 +286,7 @@ class Main
     end
     return denominator
   end
-
-  def acquire_tweets_and_store_db
-    # TwitterAPIから1ユーザのtweetを指定件数 取得
-    tweets = @crawler.get_tweets(3200)
-
-    # DBに取得データを保存
-    user = tweets.first["user"]
-    User.store_db(user)
-    Tweet.store_db(tweets)
-  end
-
 end
 
-# クローラを使いDBにTweetを追加する
-# 引数は取得するTweet件数
-# Main.new.acquire_tweets_and_store_db
+# tfidf, entropyを計算するプログラム
 Main.new.main
