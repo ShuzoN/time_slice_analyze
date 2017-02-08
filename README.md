@@ -145,7 +145,7 @@ $ rails runner lib/assets/main.rb --tfidf --overlap 2
 オプション
 
 |オプション|意味|  
-|-:-|-:-|  
+|:-:|:-:|  
 |--entropy|エントロピーを計算するモード|  
 |--tfidf|tfidfを計算するモード|  
 |--overlap|重複区間を指定する. 1は重複なし, 2は1/2区間重複を意味する|  
